@@ -171,6 +171,15 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("이메일에 gmail 또는 google을 포함하는 자료 검색")
+    void findEmailGmailOrGoogle() {
+        List<Users> users = userRepository.findByEmailContaining("google");
+        for (Users user : users) {
+            log.info("email = {}", user.getEmail());
+        }
+    }
+
+    @Test
     @DisplayName("findByLikeColor")
     void findByLikeColor() {
         List<Users> users = userRepository.findByLikeColor("blue");
