@@ -2,11 +2,24 @@ package com.my.total_jpa_back.users.repository;
 
 import com.my.total_jpa_back.common.entity.Gender;
 import com.my.total_jpa_back.users.entity.Users;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<Users, Long> {
+
+    // JPQL(자바기반의 SQL) : fetch join ...
+    @Query("""
+                select distinct u
+                    from Users u
+                        join fetch u.orders
+            """)
+    List<Users> findAllWithOrders();
+
+    Slice<Users> findAllBy(Pageable pageable);
     // 1. 성별조회
     List<Users> findByGender(Gender gender);
 

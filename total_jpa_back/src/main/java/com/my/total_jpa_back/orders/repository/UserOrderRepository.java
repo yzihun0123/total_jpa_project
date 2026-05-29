@@ -1,12 +1,26 @@
 package com.my.total_jpa_back.orders.repository;
 
 import com.my.total_jpa_back.common.entity.OrderStatus;
+import com.my.total_jpa_back.orders.dto.OrderResponse;
 import com.my.total_jpa_back.orders.entity.UserOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface UserOrderRepository extends JpaRepository<UserOrder, Long> {
+    @Query("""
+        select new com.my.total_jpa_back.orders.dto.OrderResponse(
+                o.id,
+                o.productName,
+                o.price,
+                u.name
+            ) 
+            from UserOrder o
+            join o.user u
+        """)
+    List<OrderResponse> findOrderResponse();
+
     // 2. 주문상태로 조회
     // select * from user_order where status = 'COMPLETE'
     List<UserOrder> findByStatus(OrderStatus status);

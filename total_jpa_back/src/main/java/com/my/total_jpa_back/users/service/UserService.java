@@ -45,7 +45,7 @@ public class UserService {
 
     @Transactional
     public void delete(Long id) {
-        // 해당하는 ID가 존재하는지 호가인 없으면 Exception 처리
+        // 해당하는 ID가 존재하는지 확인. 없으면 Exception 처리
         Users user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException());
         userRepository.delete(user);
