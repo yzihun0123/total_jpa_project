@@ -11,29 +11,62 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface UserOrderRepository extends JpaRepository<UserOrder, Long> {
-    // 1. COMPLETE 상태
-    //  2. price >= 100000
-    //  3. 이름에 Kim 포함
-    //  4. 최신순 정렬
+    // userId로 조회
     @Query("""
-                select new com.my.total_jpa_back.orders.dto.OrderMultiSearchResponse(
-                        o.orderId,
-                        o.productName,
-                        o.price,
-                        o.status,
-                        u.name,
-                        u.email
-                    )
-                    from userOrder o
-                        join o.user u
-                    where o.status = :status and o.price >= :price and .u.name like %:keyword%
-                    order by o.createdAt desc
-            """)
-    List<OrderMultiSearchResponse> searchOrders(
-            @Param("status")OrderStatus status,
-            @Param("price")Integer price,
-            @Param("keyword")String keyword
+            select new com.my.total_jpa_back.orders.dto.OrderResponse(
+                o.id,
+                o.productName,
+                o.price,
+                o.status,
+                u.name
+            )
+            from UserOrder o
+                join o.user u
+            where u.id = :userId
+    """)
+    List<OrderResponse> searchByUserId(@Param("userId")Long userId);
+
+    // 1. COMPLETE 상태
+   // 2. price >= 100000
+   // 3. 이름에 Kim 포함
+   // 4. 최신순 정렬
+    @Query("""
+            select new com.my.total_jpa_back.orders.dto.OrderMultiSearchResponse(
+                  o.id,
+                  o.productName,
+                  o.price,
+                  o.status,
+                  u.name,
+                  u.email
+                )
+            from UserOrder o
+            join o.user u
+            where o.status = :status
+            and o.price >= :price
+            and u.name like %:keyword%
+            order by o.createdAt desc        
+        """)
+        List<OrderMultiSearchResponse> searchOrders(
+                @Param("status") OrderStatus status,
+                @Param("price") Integer price,
+                @Param("keyword") String keyword
     );
+
+    // 주문상태가 COMPLETE인 자료 검색
+    @Query("""
+        select new com.my.total_jpa_back.orders.dto.OrderResponse(
+                o.id,
+                o.productName,
+                o.price,
+                o.status,
+                u.name
+            )
+            from UserOrder o
+                join o.user u
+            where o.status = :status
+    """)
+    List<OrderResponse> findOrderStatusResponse(
+            @Param("status")OrderStatus status);
 
     @Query("""
         select new com.my.total_jpa_back.orders.dto.OrderResponse(
@@ -42,25 +75,11 @@ public interface UserOrderRepository extends JpaRepository<UserOrder, Long> {
                 o.price,
                 o.status,
                 u.name
-            ) 
+            )
             from UserOrder o
-            join o.user u
-        """)
+                join o.user u
+    """)
     List<OrderResponse> findOrderResponse();
-
-    @Query(value = """
-                select new com.my.total_jpa_back.orders.dto.OrderResponse(
-                    o.id,
-                    o.productName,
-                    o.price,
-                    o.status,
-                    u.name
-                )
-                from UserOrder o
-                    join o.user u
-                where o.status = :status
-            """)
-    List<OrderResponse> findOrderStatusResponse(@Param("status") OrderStatus status);
 
     // 2. 주문상태로 조회
     // select * from user_order where status = 'COMPLETE'
@@ -86,7 +105,7 @@ public interface UserOrderRepository extends JpaRepository<UserOrder, Long> {
     // select * from user_order where price between 290000 and 300000;
     List<UserOrder> findByPriceBetween(int start, int end);
 
-    // 8. 가격 내림차순
+    // 8. 가격 내림차순..
     // select * from user_order Order by price desc;
     List<UserOrder> findAllByOrderByPriceDesc();
 

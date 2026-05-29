@@ -7,8 +7,8 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.46/a5cfe99fdf320e84955ef653f2ce1bf789d11385/lombok-1.18.46.jar" />
         </processorPath>
-        <module name="com.my.total_jpa_back.main" />
-        <module name="com.my.total_jpa_back.test" />
+        <module name="total_jpa_back.main" />
+        <module name="total_jpa_back.test" />
       </profile>
     </annotationProcessing>
   </component>
@@ -17,6 +17,9 @@
       <module name="com.my.total_jpa_back" options="-parameters" />
       <module name="com.my.total_jpa_back.main" options="-parameters" />
       <module name="com.my.total_jpa_back.test" options="-parameters" />
+      <module name="total_jpa_back" options="-parameters" />
+      <module name="total_jpa_back.main" options="-parameters" />
+      <module name="total_jpa_back.test" options="-parameters" />
     </option>
   </component>
 </project>

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class OrderResponse {
     private Long orderId;
     private String productName;
@@ -16,7 +17,7 @@ public class OrderResponse {
     public OrderResponse(
             Long orderId, String productName,
             Integer price, OrderStatus status, String userName
-    ) {
+    ){
         this.orderId = orderId;
         this.productName = productName;
         this.price = price;
