@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-// 오류 처리 결과를 정리해서 보낼 DTO
+// 오류처리 결과를 정리해서 보낼 DTO
 public class ErrorResponse {
     // 에러상태코드
     private int status;

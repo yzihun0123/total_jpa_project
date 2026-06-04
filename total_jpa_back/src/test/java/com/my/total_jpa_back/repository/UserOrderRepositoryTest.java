@@ -25,26 +25,13 @@ class UserOrderRepositoryTest {
 
     @Test
     @Transactional
-    @DisplayName("주문 상태 COMPLETE만 받기")
-    void completeStatus() {
-        List<OrderResponse> result =
-                userOrderRepository.findOrderStatusResponse(OrderStatus.COMPLETE);
-        result.stream()
-                .forEach(x ->
-                        log.info("주문번호 : {}, 제품명 : {}, 고객명 : {}, 상태 : {}",
-                                x.getOrderId(), x.getProductName(), x.getUserName(), x.getStatus()));
-    }
-
-    @Test
-    @Transactional
     @DisplayName("DTO로 결과 받기")
-    void dtoResultTest() {
+    void dtoResultTest(){
         List<OrderResponse> result =
                 userOrderRepository.findOrderResponse();
         result.stream().limit(100)
-                .forEach(x ->
-                        log.info("주문번호 : {}, 제품명 : {}, 고객명 : {}",
-                                x.getOrderId(), x.getProductName(), x.getUserName()));
+                .forEach(x -> log.info("주문번호:{}, 제품명:{}, 고객명:{}",
+                        x.getOrderId(), x.getProductName(), x.getUserName()));
     }
 
     // ManyToOne Test
@@ -57,18 +44,18 @@ class UserOrderRepositoryTest {
         log.info("orderId = {}", order.getId());
         log.info("제품명 = {}", order.getProductName());
         log.info("가격 = {}", order.getPrice());
-        log.info("배송 상태 = {}", order.getStatus());
-        // User 정보를 출력
-        log.info("주문 고객 : {}", order.getUser().getName());
+        log.info("배송상태 = {}", order.getStatus());
+        // User 정보 출력
+        log.info("주문고객 : {}", order.getUser().getName());
         log.info("이메일 : {}", order.getUser().getEmail());
     }
 
-    // 주문상태에 따른 오름차순 정렬, 제품명에 대해서 내림차순, 주문일의 내림차순
+    // 주문상태에 따른 오름차순 정렬, 제품명에 내림차순, 주문일의 내림차순
+    // 상위 100개만 출력
     @Test
     @DisplayName("주문상태에 따른 정렬")
     void multiConditionSortTest() {
-        Sort sort = Sort.by("status")
-                .ascending()
+        Sort sort = Sort.by("status").ascending()
                 .and(
                         Sort.by("productName")
                                 .descending()
@@ -77,13 +64,11 @@ class UserOrderRepositoryTest {
                                                 .descending()
                                 )
                 );
-
         List<UserOrder> orders = userOrderRepository.findAll(sort);
         orders.stream()
                 .limit(1000)
-                .forEach(x-> log.info("status : {}, 제품명 : {}, 주문일 : {}",
-                        x.getStatus(), x.getProductName(), x.getCreatedAt())
-                );
+                .forEach(x -> log.info("status : {}, product : {}, date : {}",
+                        x.getStatus(), x.getProductName(), x.getCreatedAt()));
     }
 
     @Test

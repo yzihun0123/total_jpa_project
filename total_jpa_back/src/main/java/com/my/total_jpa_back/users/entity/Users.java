@@ -6,7 +6,6 @@ import com.my.total_jpa_back.orders.entity.UserOrder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "users")
-@ToString
 public class Users extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +25,10 @@ public class Users extends BaseEntity {
     @Column(name = "like_color")
     private String likeColor;
     // Users 엔티티의 user가 연관관계의 주인이다.
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserOrder> orders = new ArrayList<>();
+    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    // private List<UserOrder> orders = new ArrayList<>();
 
     @Override
-
     public String toString() {
         return "Users{" +
                 "id=" + id +

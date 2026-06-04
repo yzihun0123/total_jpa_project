@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handlerUserNotFound(
             UserNotFoundException e
-    ) {
+    ){
         return ErrorResponse.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(e.getMessage())

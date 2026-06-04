@@ -9,16 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderMultiSearchRequest {
-    @JsonProperty(value = "order_id")
-    private Long orderId;
-    @JsonProperty(value = "product_name")
-    private String productName;
-    @JsonProperty(value = "price")
-    private Integer price;
-    @JsonProperty(value = "status")
+    @JsonProperty("json_status")
     private OrderStatus status;
-    @JsonProperty(value = "user_name")
-    private String userName;
-    @JsonProperty(value = "email")
-    private String email;
+    @JsonProperty("json_price")
+    private Integer price;
+    @JsonProperty("json_keyword")
+    private String keyword;
 }

@@ -22,48 +22,23 @@ class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
 
-    @Test
-    @Transactional
-    @DisplayName("JPQL로 가져오기")
-    void joinTest() {
+    //@Test
+    //@Transactional
+    //@DisplayName("JPQL로 가져오기")
+    //void joinTest() {
         // 전체 User 리스트 받아온다.
-        List<Users> users = userRepository.findAllWithOrders();
-        for (Users user : users) {
-            log.info("이름 : {}", user.getName());
-            for (UserOrder order : user.getOrders()) {
-                log.info("주문 번호 : {}, 제품명 : {}", order.getId(), order.getProductName());
-            }
-        }
-    }
+      //  List<Users> users = userRepository.findAllWithOrders();
+        //for (Users user : users) {
+         //   log.info("이름 : {}", user.getName());
+          //  for (UserOrder order : user.getOrders()) {
+           //     log.info("주문번호 : {}, 제품명 : {}", order.getId(), order.getProductName());
+          //  }
+      //  }
+   // }
 
-    @Test
-    @Transactional
-    @DisplayName("N+1 문제 확인")
-    void nPlusOneTest() {
-        // 전체 User 리스트 받아온다.
-        List<Users> users = userRepository.findAll();
-        for (Users user : users) {
-            log.info("이름 : {}", user.getName());
-            for (UserOrder order : user.getOrders()) {
-                log.info("주문 번호 : {}, 제품명 : {}", order.getId(), order.getProductName());
-            }
-        }
-    }
 
-    // 회원 정보 조회 후 주문정보 찾아보기
-    @Test
-    @DisplayName("회원 정보 조회 후 주문정보 찾아보기")
-    @Transactional
-    void findUserAndOrderInfoTest() {
-        Users user = userRepository.findById(1L)
-                .orElseThrow();
-        log.info("이름 : {}", user.getName());
-        // 주문목록 조회(fetch Type : Lazy)
-        for (UserOrder order : user.getOrders()) {
-            log.info("제품명 : {}", order.getProductName());
-            log.info("가격 : {}", order.getPrice());
-        }
-    }
+
+
 
     // Slice : 무한 스크롤 용으로 자료가 필요할 때
     // 가볍다. 정보를 다음페이지? ..
@@ -85,14 +60,16 @@ class UserRepositoryTest {
         // 이전 페이지?
         log.info("이전 페이지 : " + result.hasPrevious());
         users.stream()
-                .forEach(x -> log.info("All = {}", x));
+                .forEach(x -> log.info("All : {}", x));
     }
 
-    // 페이징 커리에 사용되는 클래스 : Pageable
-    // 전체 회원자료에서 10개 묶음으로 페이징 처리
-    // pageRequset.of
 
-    // 최근 가입한 회원 정보 중 10번 째 페이지를 추출
+
+    // 페이징 처리에 사용되는 클래스 : Pageable
+    // 전체 회원자료를 10개 묶음으로 페이징 처리
+    // PageRequest.of
+
+    // 최근 가입한 회원 정보 중 10번째 페이지를 추출
     // 한 페이지 당 30개씩 출력
     @Test
     @DisplayName("최신 가입 회원 정보 출력 - 10번째 페이지")
@@ -101,8 +78,8 @@ class UserRepositoryTest {
         Pageable pageable = PageRequest.of(9, 30, sort);
         // 결과를 Page 객체로 받기
         Page<Users> result = userRepository.findAll(pageable);
-        // page 객체는 내가 요청한 자료 + 기타 정보
-        // Page가 준 내용 중 리스트만 뽑아서 리스트로 저장
+        // Page 객체는 내가 요청한 자료 + 기타 정보
+        // Page가 준 내용중 리스트만 뽑아서 리스트로 저장
         List<Users> users = result.getContent();
         // 전체 행 수
         log.info("전체 행 수 : " + result.getTotalElements());
@@ -115,7 +92,7 @@ class UserRepositoryTest {
         // 이전 페이지?
         log.info("이전 페이지 : " + result.hasPrevious());
         users.stream()
-                .forEach(x -> log.info("All = {}", x));
+                .forEach(x -> log.info("All : {}", x));
     }
 
     @Test
@@ -123,8 +100,8 @@ class UserRepositoryTest {
     void pagingTest() {
         Pageable pageable = PageRequest.of(49, 10);
         Page<Users> result = userRepository.findAll(pageable);
-        // page 객체는 내가 요청한 자료 + 기타 정보
-        // Page가 준 내용 중 리스트만 뽑아서 리스트로 저장
+        // Page 객체는 내가 요청한 자료 + 기타 정보
+        // Page가 준 내용중 리스트만 뽑아서 리스트로 저장
         List<Users> users = result.getContent();
         // 전체 행 수
         log.info("전체 행 수 : " + result.getTotalElements());
@@ -137,7 +114,7 @@ class UserRepositoryTest {
         // 이전 페이지?
         log.info("이전 페이지 : " + result.hasPrevious());
         users.stream()
-                .forEach(x -> log.info("All = {}", x));
+                .forEach(x -> log.info("All : {}", x));
     }
 
     @Test
@@ -151,26 +128,27 @@ class UserRepositoryTest {
         List<Users> users = userRepository.findAll(sort);
         users.stream()
                 .limit(5)
-                .forEach(x -> log.info("name = {}", x.getName()));
-        for (int i = 0; i < 5; i++) {
-            log.info("name : {}", users.get(i).getName());
-        }
+                .forEach(x -> log.info("name : {}", x.getName()));
+//        for (int i=0; i<5; i++) {
+//            log.info("name = {}", users.get(i).getName());
+//        }
     }
 
-    // 최근 가입 회원 10명 출력
+    //최근 가입 회원 10명 출력(아이디, 이름)
     @Test
     @DisplayName("최근 가입 회원 10명 출력")
-    void orderByCreatedAtDescTest() {
+    void orderByCreatedAtDescTest(){
         Sort sort = Sort.by("createdAt")
                 .descending();
         List<Users> users = userRepository.findAll(sort);
 
         users.stream()
                 .limit(10)
-                .forEach(x-> log.info("user_id : {}, name : {}, 가입일 : {}",
+                .forEach(x -> log.info("user_id :  {}, name : {}, 가입일 : {}",
                         x.getId(), x.getName(), x.getCreatedAt()));
     }
 
+    // 색상 오름차순, 같은 색상자료는 이름 내림차순, 상위 100개 출력
     @Test
     @DisplayName("색상 오름차순, 같은 색상자료는 이름 내림차순")
     void multiSortTest() {
@@ -181,11 +159,13 @@ class UserRepositoryTest {
                                 .descending()
                 );
         List<Users> users = userRepository.findAll(sort);
-
         users.stream()
-                .forEach(x-> log.info("color : {}, name : {}" ,
+                .limit(100)
+                .forEach(x -> log.info("color : {} name : {}",
                         x.getLikeColor(), x.getName()));
     }
+
+
 
     @Test
     @DisplayName("회원 전체 조회")
@@ -212,15 +192,6 @@ class UserRepositoryTest {
         List<Users> users = userRepository.findByNameContaining("kim");
         for (Users user : users) {
             log.info("name = {}", user.getName());
-        }
-    }
-
-    @Test
-    @DisplayName("이메일에 gmail 또는 google을 포함하는 자료 검색")
-    void findEmailGmailOrGoogle() {
-        List<Users> users = userRepository.findByEmailContaining("google");
-        for (Users user : users) {
-            log.info("email = {}", user.getEmail());
         }
     }
 
