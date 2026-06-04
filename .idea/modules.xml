@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.my.total_jpa_back.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.my.total_jpa_back.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.my.total_jpa_back.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.my.total_jpa_back.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/total_jpa_back.main.iml" filepath="$PROJECT_DIR$/.idea/modules/total_jpa_back.main.iml" />
     </modules>
   </component>
 </project>

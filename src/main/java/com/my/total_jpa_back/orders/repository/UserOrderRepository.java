@@ -105,7 +105,7 @@ public interface UserOrderRepository extends JpaRepository<UserOrder, Long> {
     // select * from user_order where price between 290000 and 300000;
     List<UserOrder> findByPriceBetween(int start, int end);
 
-    // 8. 가격 내림차순..
+    // 8. 가격 내림차순
     // select * from user_order Order by price desc;
     List<UserOrder> findAllByOrderByPriceDesc();
 
