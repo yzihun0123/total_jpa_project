@@ -16,7 +16,7 @@ public class UserOrder extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 //    @Column(name = "user_id")
-//    private Long userId;  // Users 테이블의 외래키 역할
+//    private Long userId; // Users 테이블의 외래키 역할
     // Users 객체 자체를 포함.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

@@ -14,14 +14,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserOrderService {
     private final UserOrderRepository userOrderRepository;
-    private final OrderMultiSearchRequest orderMultiSearchRequest;
-    private final OrderMultiSearchResponse orderMultiSearchResponse;
 
     public List<OrderResponse> findByStatus(OrderStatus status) {
         return userOrderRepository.findOrderStatusResponse(status);
     }
 
-    public List<OrderMultiSearchResponse> multiSearch(OrderStatus status, Integer price, String keyword) {
-        return userOrderRepository.searchOrders(status, price, keyword);
+    public List<OrderMultiSearchResponse> multiSearch(OrderMultiSearchRequest request) {
+        return userOrderRepository.searchOrders(
+                request.getStatus(),
+                request.getPrice(),
+                request.getKeyword()
+        );
+    }
+
+    public List<OrderResponse> getOrdersByUserId(Long userId) {
+        return userOrderRepository.searchByUserId(userId);
     }
 }

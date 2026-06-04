@@ -1,5 +1,6 @@
 package com.my.total_jpa_back.users.controller;
 
+import com.my.total_jpa_back.common.dto.PageResponse;
 import com.my.total_jpa_back.common.entity.Gender;
 import com.my.total_jpa_back.common.exception.UserNotFoundException;
 import com.my.total_jpa_back.users.dto.*;
@@ -7,17 +8,16 @@ import com.my.total_jpa_back.users.entity.Users;
 import com.my.total_jpa_back.users.repository.UserRepository;
 import com.my.total_jpa_back.users.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import lombok.extern.java.Log;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// Restful 한 API를 제공할 때 사용하는 Annotation
-// @Controller
-// @ResponseBody
+// Restful 한 API를 제공할 때 사용하는 어노테이션
+//@Controller
+//@ResponseBody
 
 @RestController
 @RequiredArgsConstructor
@@ -29,10 +29,11 @@ public class UserController {
 
     // User ID 로 삭제 처리 API 만들기
     @DeleteMapping("/users/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id){
         userService.delete(id);
-        return "회원 삭제 완료";
+        return "회원삭제완료";
     }
+
 
     // User Update API
     // 수정 대상은 PathVariable, 값은 RequestBody 받아서 수정
@@ -40,22 +41,23 @@ public class UserController {
     public UserResponse update(
             @PathVariable Long id,
             @RequestBody UserUpdateRequest request
-            ) {
+            ){
         return userService.update(id, request);
     }
 
     // 새로운 User 추가하기 API
     @PostMapping("/users")
-    public UserResponse create(@RequestBody UserCreateRequest request) {
+    public UserResponse create(@RequestBody UserCreateRequest request){
         return userService.create(request);
     }
 
     // 예외처리 테스트
     @GetMapping("/users/{id}")
-    public Users findById(@PathVariable Long id) {
+    public Users findById(@PathVariable Long id){
         return userRepository.findById(id)
-                .orElseThrow(()->new UserNotFoundException());
+                .orElseThrow(()-> new UserNotFoundException());
     }
+
 
     // RequestBody 테스트
     @PostMapping("/test")
@@ -66,6 +68,7 @@ public class UserController {
                 .age(request.getAge())
                 .build();
     }
+
 
     // 전체 리스트를 요청
     @GetMapping("/users")
@@ -83,11 +86,6 @@ public class UserController {
         return userRepository.findByNameContaining(keyword);
     }
 
-    @GetMapping("/email")
-    public List<Users> findByEmail(@RequestParam String keyword) {
-        return userRepository.findByEmailContaining(keyword);
-    }
-
     @GetMapping("/color")
     public List<Users> findByColor(@RequestParam String color) {
         return userRepository.findByLikeColor(color);
@@ -99,12 +97,15 @@ public class UserController {
             @RequestParam("gender") Gender gender) {
         return userRepository.findByLikeColorAndGender(color, gender);
     }
+    @GetMapping("/email")
+    public List<Users> findByMail(@RequestParam String mail) {
+        return userRepository.findByEmailContaining(mail);
+    }
 
     // 이름 : 오름차순, 생성일에 내림차순
     @GetMapping("/sort")
     public List<Users> findAllSort() {
-        Sort sort = Sort.by("name")
-                .ascending()
+        Sort sort = Sort.by("name").ascending()
                 .and(
                         Sort.by("createdAt")
                                 .descending()
@@ -112,16 +113,48 @@ public class UserController {
         return userRepository.findAll(sort);
     }
 
+    // Page -> DTO return
+    @GetMapping("/getPage")
+    public PageResponse<UserResponse> findPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+            ) {
+        Pageable pageable = PageRequest.of(
+                page, size,
+                Sort.by("createdAt").descending()
+        );
+        return userService.findPage(pageable);
+    }
+
     // Page
     @GetMapping("/page")
     public Page<Users> findAllPage(
             @RequestParam(name = "page", defaultValue = "0")int page,
             @RequestParam(name = "size", defaultValue = "10")int size
-    ){
+    ) {
         Pageable pageable = PageRequest.of(
                 page, size,
                 Sort.by("createdAt").descending()
         );
         return userRepository.findAll(pageable);
     }
+
+    // Slice
+    @GetMapping("/slice")
+    public Slice<Users> findAllSlice(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+
+        Pageable pageable =
+                PageRequest.of(
+                        page,
+                        size,
+                        Sort.by("createdAt")
+                                .descending()
+                );
+
+        return userRepository.findAllBy(pageable);
+    }
 }
+

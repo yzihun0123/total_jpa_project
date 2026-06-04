@@ -17,13 +17,20 @@ public class UserOrderController {
     private final UserOrderService userOrderService;
 
     @GetMapping("/status")
-    public List<OrderResponse> getStatusOrder(@RequestParam OrderStatus status) {
+    public List<OrderResponse> getStatusOrder(@RequestParam OrderStatus status){
         return userOrderService.findByStatus(status);
     }
 
-    @GetMapping("/multi-search")
+    @PostMapping("/multi-search")
     public List<OrderMultiSearchResponse> multiSearch(
-            @RequestBody OrderMultiSearchRequest request) {
+            @RequestBody OrderMultiSearchRequest request){
         return userOrderService.multiSearch(request);
+    }
+
+    @GetMapping("/users/{userId}/orders")
+    public List<OrderResponse> getOrdersSearchUserId(
+            @PathVariable Long userId
+    ){
+        return userOrderService.getOrdersByUserId(userId);
     }
 }

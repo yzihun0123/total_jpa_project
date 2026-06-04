@@ -20,7 +20,7 @@ public class UserResponse {
     private LocalDateTime updatedAt;
 
     // Users Entity -> UserResponse Dto
-    public static UserResponse from(Users users) {
+    public static UserResponse from(Users users){
         return UserResponse.builder()
                 .id(users.getId())
                 .name(users.getName())
