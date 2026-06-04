@@ -19,7 +19,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     //""")
     //List<Users> findAllWithOrders();
 
-
     Slice<Users> findAllBy(Pageable pageable);
 
     // 1. 성별조회
