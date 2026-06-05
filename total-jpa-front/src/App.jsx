@@ -1,6 +1,5 @@
 import './App.css'
-import Table from 'react-bootstrap/Table';
-import Pagination from 'react-bootstrap/Pagination';
+import {Table, Pagination, Form, Button} from "react-bootstrap";
 import api from './assets/api';
 import { useState, useEffect } from 'react';
 
@@ -18,7 +17,8 @@ function App() {
 
   // 처음 페이지가 로딩되면 DB에서 api 요청하기
   // localhost:8080/api
-  useEffect(() => {
+  // 리스트를 불러오는 함수
+  function fetchUsers(){
     api
       .get(`/getPage?page=${page}&size=${pageCount}`)
       .then( (res) => {
@@ -30,6 +30,10 @@ function App() {
       .catch((err) => {
         console.log(err)
       })
+  }
+
+  useEffect(() => {
+    fetchUsers();
   }, [page]) // page 값이 바뀔 때 마다 실행
 
   // 한 화면에 10개 페이지씩 보여주기 처리
@@ -40,6 +44,49 @@ function App() {
   const startPage = pageGroup * pageCount;
   const endPage = Math.min(startPage + pageCount, totalPages)
 
+  // 신규데이터 추가용 작업
+  // 추가할 사용자의 폼과 연결될 state 선언
+  const [form, setForm] = useState({
+    name : '',
+    gender : 'Male',
+    email : '',
+    likeColor : ''
+  })
+
+  // 사용자 입력값을 form state에 저장
+  // e : 각 컨트롤에 입력되거나 선택된 값
+  function handleChange(e){
+    const name = e.target.name;
+    const value = e.target.value;
+    // 입력값을 form state에 수정
+    setForm({...form,[name] : value,})
+  }
+
+  // 사용자 추가 단추 클릭 시 처리할 이벤트
+  // async 는 비동기...
+  async function handleSubmit(e){
+    e.preventDefault();  // 중간에 입력한 자료를 유지
+    try{
+      // 동기
+      await api.post("/users", form)
+      alert("사용자가 추가 되었습니다.")
+      // form 스테이트 초기화
+      setForm({
+        name : "",
+        gender : "Male",
+        email : "",
+        likeColor : ""
+      })
+      // 맨 앞에 페이지로 이동해서 화면에 뿌린다.
+      setPage(0)
+      // 페이지 로드 함수를 호출
+      fetchUsers()
+    } catch(err){
+      console.log(err)
+      alert("사용자 추가 실패")
+    }
+  }
+
   return (
   <div className="container py-5">
     <div className="text-center mb-5">
@@ -48,6 +95,54 @@ function App() {
         Spring Boot + React + JPA Sample Project
       </p>
     </div>
+    <Form onSubmit={handleSubmit} className="mb-5 border rounded p-4">
+      <h4 className="mb-3">사용자 추가</h4>
+      <Form.Group className="mb-3">
+        <Form.Label>이름</Form.Label>
+        <Form.Control 
+          type="text"
+          name="name"
+          value={form.name}
+          onChange={(e) => handleChange(e)}
+          placeholder="이름 입력"
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>성별</Form.Label>
+        <Form.Select 
+          name="gender"
+          value={form.gender}
+          // 함수를 호출해도 자동으로 e 값을 전달 : 리액트가 해줌.
+          onChange={handleChange}
+          >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </Form.Select>
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>이메일</Form.Label>
+        <Form.Control 
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          placeholder="이메일 입력"
+        />
+      </Form.Group>
+      <Form.Group className="mb-3">
+        <Form.Label>좋아하는 색상</Form.Label>
+        <Form.Control 
+          type="text"
+          name="likeColor"
+          value={form.likeColor}
+          onChange={handleChange}
+          placeholder="색상 입력"
+        />
+      </Form.Group>
+      <Button type="submit" variant="primary">
+        추가하기
+      </Button>
+    </Form>
     <Table striped bordered hover>
       <thead>
         <tr>

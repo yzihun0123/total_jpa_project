@@ -27,8 +27,23 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+	// :white_check_mark: QueryDSL (Spring Boot 3 / Jakarta)
+	implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// :white_check_mark: 생성된 Q클래스 경로를 소스에 포함
+def generated = file("build/generated/sources/annotationProcessor/java/main")
+sourceSets {
+	main {
+		java {
+			srcDirs += generated
+		}
+	}
 }
